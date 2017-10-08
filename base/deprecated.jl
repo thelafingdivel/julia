@@ -1913,6 +1913,9 @@ end
 @deprecate float(x::AbstractString) parse(Float64, x)
 @deprecate float(a::AbstractArray{<:AbstractString}) parse.(Float64, a)
 
+# issue #24019
+@deprecate similar(a::Associative, ::Type{Pair{K,V}}) where {K, V} empty(a, K, V)
+
 # END 0.7 deprecations
 
 # BEGIN 1.0 deprecations
