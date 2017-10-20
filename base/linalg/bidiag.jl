@@ -269,12 +269,12 @@ end
 function diag(M::Bidiagonal{T}, n::Integer=0) where T
     if n == 0
         return M.dv
-    elseif n == 1
-        return M.uplo == 'U' ? M.ev : zeros(T, size(M,1)-1)
-    elseif n == -1
-        return M.uplo == 'L' ? M.ev : zeros(T, size(M,1)-1)
+    elseif n == 1 && M.uplo == 'U'
+        return M.ev
+    elseif n == -1 && M.uplo == 'L'
+        return M.ev
     elseif -size(M,1) <= n <= size(M,1)
-        return zeros(T, size(M,1)-abs(n))
+        return fill!(similar(M.dv, size(M,1)-abs(n)), 0)
     else
         throw(ArgumentError(string("requested diagonal, $n, must be at least $(-size(M, 1)) ",
             "and at most $(size(M, 2)) for an $(size(M, 1))-by-$(size(M, 2)) matrix")))

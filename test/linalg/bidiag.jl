@@ -214,9 +214,18 @@ srand(1)
         end
 
         @testset "Diagonals" begin
-            @test diag(T,2) == zeros(elty, n-2)
+            @test (@inferred diag(T)) === dv
+            @test (@inferred diag(T, uplo == :U ? 1 : -1)) === ev
+            @test (@inferred diag(T,2)) == zeros(elty, n-2)
             @test_throws ArgumentError diag(T, -n - 1)
-            @test_throws ArgumentError diag(T, n + 1)
+            @test_throws ArgumentError diag(T,  n + 1)
+            # test diag with another wrapped vector type
+            gdv, gev = GenericArray(dv), GenericArray(ev)
+            G = Bidiagonal(gdv, gev, uplo)
+            @test (@inferred diag(G)) === gdv
+            @test (@inferred diag(G, uplo == :U ? 1 : -1)) === gev
+            @test_throws ArgumentError diag(G, -n - 1)
+            @test_throws ArgumentError diag(G,  n + 1)
         end
 
         @testset "Eigensystems" begin

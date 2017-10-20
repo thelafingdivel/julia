@@ -134,7 +134,7 @@ function diag(M::SymTridiagonal{T}, n::Integer=0) where T
     elseif absn==1
         return M.ev
     elseif absn <= size(M,1)
-        return zeros(T,size(M,1)-absn)
+        return fill!(similar(M.dv, size(M,1)-absn), 0)
     else
         throw(ArgumentError(string("requested diagonal, $n, must be at least $(-size(M, 1)) ",
             "and at most $(size(M, 2)) for an $(size(M, 1))-by-$(size(M, 2)) matrix")))
@@ -537,7 +537,7 @@ function diag(M::Tridiagonal{T}, n::Integer=0) where T
     elseif n == 1
         return M.du
     elseif abs(n) <= size(M,1)
-        return zeros(T,size(M,1)-abs(n))
+        return fill!(similar(M.d, size(M,1)-abs(n)), 0)
     else
         throw(ArgumentError(string("requested diagonal, $n, must be at least $(-size(M, 1)) ",
             "and at most $(size(M, 2)) for an $(size(M, 1))-by-$(size(M, 2)) matrix")))
